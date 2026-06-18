@@ -103,7 +103,7 @@ def buy():
     db.execute("UPDATE users SET u_balance=(?) WHERE u_id=(?)", cash, session["user_id"])
 
     now = datetime.now()
-    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
     db.execute("INSERT INTO transactions (u_id, symbol, price, shares, type, timestamp) VALUES (?, ?, ?, ?, ?, ?)",session["user_id"], symbol, price, shares, "BUY", dt_string)
     
     try:
@@ -127,25 +127,13 @@ def buy():
 @login_required
 def history():
     
-    # user_id = session["user_id"]
-
-    # # Retrieve user's current cash balance
-    # user_data = db.execute("SELECT cash FROM users WHERE id = ?", user_id)
-    # cash = user_data[0]["cash"] if user_data else 0
-
-    # # Retrieve stock symbols and shares the user owns
-    # data = db.execute("SELECT symbol, shares FROM bought WHERE user_id = ?", user_id)
-
-    # # Calculate the current price and total value of each stock
-    # total = cash
-    # for item in data:
-    #     quote = lookup(item["symbol"])
-    #     item["price"] = quote["price"]
-    #     item["total"] = float(item["shares"]) * float(item["price"])
-    #     total += float(item["total"])
-
-    # return render_template("history.html",  data=data, cash=cash, total=total)
-    return redirect("/")
+    # Show every buy/sell this user has made, most recent first.
+    transactions = db.execute(
+        "SELECT type, symbol, shares, price, timestamp "
+        "FROM transactions WHERE u_id = ? ORDER BY timestamp DESC",
+        session["user_id"],
+    )
+    return render_template("history.html", transactions=transactions)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -318,7 +306,7 @@ def sell():
         # Record the transaction
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         db.execute(
-            "INSERT INTO transactions (u_id, symbol, shares, price, type, date) "
+            "INSERT INTO transactions (u_id, symbol, shares, price, type, timestamp) "
             "VALUES (?, ?, ?, ?, ?, ?)",
             id, symbol_select, -shares_select, price, "SELL", now,
         )

@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Flask filesystem sessions
+flask_session/
+
+# SQLite databases — recreate from hyderx.sql; don't commit live data/hashes
+*.db
+*.sqlite
+*.sqlite3
+
+# Env / OS / editor
+.env
+.DS_Store
+.idea/
+.vscode/

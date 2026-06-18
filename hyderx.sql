@@ -34,7 +34,7 @@ CREATE TABLE users (
   'u_id' INTEGER PRIMARY KEY AUTOINCREMENT,
   'u_name' TEXT NOT NULL UNIQUE,
   'u_hash' TEXT NOT NULL,
-  'u_email' TEXT DEFAULT NULL UNIQUE CHECK (`u_email` REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'),
+  'u_email' TEXT DEFAULT NULL UNIQUE,
   'u_balance' INTEGER NOT NULL DEFAULT 10000
 );
 
@@ -53,8 +53,9 @@ CREATE TABLE transactions (
 CREATE TABLE portfolio (
   'p_id' integer PRIMARY KEY AUTOINCREMENT,
   'u_id' INTEGER NOT NULL,
-  'symbol' TEXT NOT NULL UNIQUE,
+  'symbol' TEXT NOT NULL,
   'price' REAL NOT NULL,
   'shares' INTEGER NOT NULL,
+  UNIQUE (u_id, symbol),
   FOREIGN KEY (`u_id`) REFERENCES `users`(`u_id`) ON DELETE CASCADE
 );
