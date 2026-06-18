@@ -9,33 +9,28 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th class="text-start">Type</th>
                 <th class="text-start">Symbol</th>
                 <th class="text-end">Shares</th>
                 <th class="text-end">Price</th>
-                <th class="text-end">TOTAL</th>
+                <th class="text-end">Time</th>
             </tr>
         </thead>
-       <tbody>
-            {% for i in data %}
+        <tbody>
+            {% for t in transactions %}
                 <tr>
-                    <td class="text-start">{{ i.symbol }}</td>
-                    <td class="text-end">{{i.shares}}</td>
-                    <td class="text-end">{{i.price}}</td>
-                    <td class="text-end">{{i.total}}</td>
+                    <td class="text-start">{{ t.type }}</td>
+                    <td class="text-start">{{ t.symbol }}</td>
+                    <td class="text-end">{{ t.shares | abs }}</td>
+                    <td class="text-end">{{ t.price | usd }}</td>
+                    <td class="text-end">{{ t.timestamp }}</td>
                 </tr>
             {% endfor %}
         </tbody>
-        <tfoot>
-            <tr>
-                <td class="border-0 fw-bold text-end" colspan="3">Cash</td>
-                <td class="border-0 text-end">{{cash | usd}}</td>
-            </tr>
-            <tr>
-                <td class="border-0 fw-bold text-end" colspan="3">TOTAL</td>
-                <td class="border-0 w-bold text-end">{{total | usd}}</td>
-            </tr>
-        </tfoot>
     </table>
 
+    {% if not transactions %}
+        <p class="text-muted">No transactions yet.</p>
+    {% endif %}
 
 {% endblock %}
